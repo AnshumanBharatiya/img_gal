@@ -59,7 +59,8 @@
 						<div class="row">
 							<div class="col-sm-4 m-auto">
 								<div class="card-box">
-									<input type="file" name="img_file" id="img_file" class="form-control"  required>
+									<input type="file" name="img_file" id="img_file" class="form-control" accept="image/*" required>
+									<span> <?php if(isset($_SESSION['data'])){echo 'Image -'.$_SESSION['data']['image_file_name'];}?></span>
 								</div>
 							</div>
 						</div>
@@ -67,7 +68,7 @@
 							<div class="col-sm-4 m-auto">
 								<div class="card-box">
 									<label for="img_name" class="form-label">New Image Name</label>
-									<input type="text" name="img_name" class="form-control"  required placeholder="Enter Image Name">
+									<input type="text" name="img_name" class="form-control"  required placeholder="Enter Image Name" value="<?php if(isset($_SESSION['data'])){echo $_SESSION['data']['image_name'];}?>">
 								</div>
 							</div>
 						</div>
@@ -75,14 +76,13 @@
 							<div class="col-sm-4 m-auto">
 								<div class="card-box">
 									<label for="img_tags" class="form-label">Add Tags (Separate with , )</label>
-									<textarea class="form-control" id="img_tags" name="img_tags" rows="3" required></textarea>
+									<textarea class="form-control" id="img_tags" name="img_tags" rows="3" required 	style="resize: none;"><?php if(isset($_SESSION['data'])){echo $_SESSION['data']['image_tag'];}?></textarea>
 								</div>
 							</div>
 						</div>
 						<div class="row my-3">
 							<div class="col-sm-4 m-auto">
 								<input type="submit" value="Upload" name="submit" class="btn btn-primary">
-								<input type="reset" value="Cancel" name="clear" class="btn btn-danger">
 							</div>
 						</div>
 						<div class="row my-3">
@@ -108,7 +108,6 @@
 									else{
 										$error_msg1 = $error_msg2 = $error_msg3 = $msg = "";
 									}
-
 								?>
 							</div>
 						</div>
