@@ -1,43 +1,71 @@
 <?php
-	session_start();
 	include('config.php');
-	$img_search_name = $_POST['search'];
-	
-	$sql = "select * from img_gallery where img like '%{$img_search_name}%' or img_tag like '%{$img_search_name}%' ";
 
+if(isset($_POST['SEARCH']))
+{
+	$output = "";
+	$img_search_name = $_POST['SEARCH'];
+
+	// $search_keys = explode(',',$img_search_name);
+	// $query_str = array();
+	// foreach ($search_keys as $keyword) {
+		// 	if($keyword){
+			// 		$query_str[] = "img LIKE '%{$keyword}%'";
+			// 		$query_str[] = "img_tag LIKE '%{$keyword}%'";
+		// 	}
+	// }
+	// $sql = "select * from img_gallery where ".implode(' or ',$query_str);
+
+	$sql = "select * from img_gallery where img LIKE '%{$img_search_name}%' or img_tag LIKE '%{$img_search_name}%'";
+	
 	$result = mysqli_query($con, $sql) or die("Failed to extract data");
 	$img_count = mysqli_num_rows($result);
-	$output = "";
-	$imagecount = "";
+	
 	if(mysqli_num_rows($result) > 0)
 	{
-		while ($row = mysqli_fetch_array($result)):
-
-			$output .= "<div class='card m-2' style='float: left'>";
-
-			$output .=	"<img src='".'img/'.$row['img']."' title='".$row['img']."' class='card-img-top' style='height:100px' data-bs-toggle='modal' data-bs-target='#exampleModal'>";
-			$output .= "<div class='card-footer'><span class='footer_text'>".$row['img']."</span></div></div>";
-
-			$imagecount .= $img_count;
-
-
-			// $output .= "<div class='carousel-item active'>";
-
-			// $output .=	"<img src='".'img/'.$row['img']."' title='".$row['img']."' class='card-img-top' style='height:100px' class='d-block w-100' data-bs-toggle='modal' data-bs-target='#exampleModal'>";
-			// $output .= "</div>";
-			// $output .= "<div class='card-footer'><span class='footer_text'>".$row['img']."</span></div></div>";
-			// $imagecount .= $img_count;								
-			// $output .= "anshuman";
-			$_SESSION['output'] = $output;
-		endwhile;
+		
+		$output .= "<div class='modal-header '>
+							<h5 class='modal-title' id='exampleModalLabel'>Total Image - $img_count</h5>
+							<button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+					</div>
+					<div class='modal-body'>
+							<div id='carouselExampleControls' class='carousel carousel-dark w-100 mx-auto slide' data-bs-touch='false' data-bs-interval='false' data-bs-ride='carousel'>
+								<div class='carousel-inner' >";
+					$i = 0;
+					foreach ($result as $row)
+					{
+						$active = '';
+						if($i == 0)
+						{
+							$active = 'active';
+									}
+								$output .= 	"<div class='carousel-item ".$active."' ><img src='img/".$row['img']."' class='d-block w-100' height='600'><div class='carousel-caption d-none d-md-block'><h5>".$row['img']."</h5><p><a href='img/".$row['img']."' class='btn btn-sm btn-secondary' download>download</a></p></div></div>";
+						$i++;
+					}
+				$output .= "</div><button class='carousel-control-prev' type='button' data-bs-target='#carouselExampleControls' data-bs-slide='prev'>
+							<span class='carousel-control-prev-icon' aria-hidden='true'></span>
+							<span class='visually-hidden'>Previous</span>
+							</button>
+							<button class='carousel-control-next' type='button' data-bs-target='#carouselExampleControls' data-bs-slide='next'>
+							<span class='carousel-control-next-icon' aria-hidden='true'></span>
+							<span class='visually-hidden'>Next</span>
+							</button>
+						</div>
+								</div>";
+		
 		mysqli_close($con);
-		echo "$output";
-		// echo 
+		echo $output;
 	}
 	else
 	{
-		echo "<h2>No Record Found</h2>";
+		echo "<div class='modal-header '>
+					<h5 class='modal-title' id='exampleModalLabel'>No record Found!!</h5>
+					<button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+			</div>
+			<div class='modal-body'>
+					<div class='text-center mt-5 text-danger'><h2>No Record Found</h2></div>
+			</div>";
 	}
-
+	
+}
 ?>
-<!-- binary use for case-sensitive in db -->
